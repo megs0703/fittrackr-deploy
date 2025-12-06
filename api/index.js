@@ -27,7 +27,7 @@ app.use(session({
   }
 }));
 
-app.post('/api/signup', async (req, res) => {
+app.post('/signup', async (req, res) => {
   try {
     const { name, email, password } = req.body;
     if (!name || !email || !password) {
@@ -49,7 +49,7 @@ app.post('/api/signup', async (req, res) => {
   }
 });
 
-app.post('/api/login', async (req, res) => {
+app.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
@@ -73,7 +73,7 @@ app.post('/api/login', async (req, res) => {
   }
 });
 
-app.get('/api/dashboard', async (req, res) => {
+app.get('/dashboard', async (req, res) => {
   try {
     if (!req.session.userId) {
       return res.status(401).json({ error: 'Not authenticated' });
@@ -89,14 +89,14 @@ app.get('/api/dashboard', async (req, res) => {
   }
 });
 
-app.get('/api/logout', (req, res) => {
+app.get('/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) return res.status(500).json({ error: 'Logout failed' });
     res.json({ success: true, message: 'Logged out successfully' });
   });
 });
 
-app.get('/api', (req, res) => {
+app.get('/', (req, res) => {
   res.json({ message: 'FitTrackr API is running' });
 });
 
