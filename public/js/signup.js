@@ -1,6 +1,4 @@
-const API_URL = window.location.hostname === 'localhost' 
-  ? 'http://localhost:5000' 
-  : '';
+const API_URL = '';
 
 const form = document.getElementById('signupForm');
 const nameInput = document.getElementById('name');
@@ -70,7 +68,7 @@ form.addEventListener('submit', async (e) => {
   spinner.classList.remove('hidden');
 
   try {
-    const response = await fetch(`${API_URL}/signup`, {
+    const response = await fetch(`/api/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password })
