@@ -92,14 +92,19 @@ The project encompasses:
     \item \textbf{Express.js}: Web application framework
     \item \textbf{bcrypt}: Password hashing library (10 salt rounds)
     \item \textbf{express-session}: Session management middleware
-    \item \textbf{mysql2}: MySQL database driver
+    \item \textbf{pg}: PostgreSQL database driver
     \item \textbf{cors}: Cross-Origin Resource Sharing middleware
-    \item \textbf{dotenv}: Environment variable management
 \end{itemize}
 
 \subsection{Database}
 \begin{itemize}
-    \item \textbf{MySQL 5.7+}: Relational database management system
+    \item \textbf{PostgreSQL}: Relational database (Neon serverless)
+\end{itemize}
+
+\subsection{Deployment}
+\begin{itemize}
+    \item \textbf{Vercel}: Frontend and serverless API hosting
+    \item \textbf{Neon}: PostgreSQL database hosting
 \end{itemize}
 
 \section{System Architecture}
@@ -141,7 +146,7 @@ The application uses two main tables:
 \subsubsection{Users Table}
 \begin{lstlisting}[language=SQL]
 CREATE TABLE users (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   name VARCHAR(100) NOT NULL,
   email VARCHAR(100) UNIQUE NOT NULL,
   password VARCHAR(255) NOT NULL,
@@ -152,7 +157,7 @@ CREATE TABLE users (
 \subsubsection{Progress Table}
 \begin{lstlisting}[language=SQL]
 CREATE TABLE progress (
-  id INT AUTO_INCREMENT PRIMARY KEY,
+  id SERIAL PRIMARY KEY,
   user_id INT NOT NULL,
   weight INT,
   calories INT,
@@ -380,22 +385,44 @@ function validateEmail(email) {
 \section{Deployment}
 
 \subsection{Deployment Architecture}
+The application is deployed using modern serverless architecture:
+
 \begin{itemize}
-    \item \textbf{Backend}: Deployed on Render.com
-    \item \textbf{Frontend}: Deployed on Vercel.com
-    \item \textbf{Database}: MySQL on Railway or PlanetScale
+    \item \textbf{Frontend}: Vercel (Static hosting)
+    \item \textbf{Backend API}: Vercel Serverless Functions
+    \item \textbf{Database}: Neon PostgreSQL (Serverless)
+\end{itemize}
+
+\subsection{Live Application URLs}
+\begin{itemize}
+    \item \textbf{Home}: \url{https://fittrackr-deploy.vercel.app/public/index.html}
+    \item \textbf{Signup}: \url{https://fittrackr-deploy.vercel.app/public/signup.html}
+    \item \textbf{Login}: \url{https://fittrackr-deploy.vercel.app/public/login.html}
+    \item \textbf{Dashboard}: \url{https://fittrackr-deploy.vercel.app/public/dashboard.html}
+\end{itemize}
+
+\subsection{Serverless Functions}
+The backend is implemented as Vercel serverless functions:
+\begin{itemize}
+    \item \texttt{/api/signup.js}: User registration endpoint
+    \item \texttt{/api/login.js}: User authentication endpoint
 \end{itemize}
 
 \subsection{Environment Configuration}
 \begin{lstlisting}[language=bash]
-DB_HOST=localhost
-DB_USER=root
-DB_PASSWORD=your_password
-DB_NAME=fittrackr
-PORT=5000
-SESSION_SECRET=random_secret_key
+DATABASE_URL=postgresql://user:pass@host/db
+SESSION_SECRET=fittrackr-secret-2025
 NODE_ENV=production
 \end{lstlisting}
+
+\subsection{Deployment Process}
+\begin{enumerate}
+    \item Code pushed to GitHub repository
+    \item Vercel automatically detects changes
+    \item Builds and deploys frontend and serverless functions
+    \item Environment variables configured in Vercel dashboard
+    \item Database hosted on Neon with connection pooling
+\end{enumerate}
 
 \section{Challenges and Solutions}
 
@@ -474,28 +501,37 @@ The application is production-ready and can be extended with additional features
     \item Web browser (Chrome, Firefox, Edge)
 \end{itemize}
 
-\subsection{Installation Steps}
+\subsection{Local Development Setup}
 \begin{lstlisting}[language=bash]
 # 1. Clone repository
-git clone <repository-url>
+git clone https://github.com/megs0703/fittrackr-deploy
 
-# 2. Install backend dependencies
-cd backend
+# 2. Install dependencies
 npm install
 
 # 3. Configure environment
-cp .env.sample .env
-# Edit .env with your credentials
+# Create .env file with DATABASE_URL
 
-# 4. Setup database
-mysql -u root -p
-source schema.sql
+# 4. Setup database on Neon
+# Run schema-postgres.sql in Neon SQL Editor
 
-# 5. Start backend
-npm start
+# 5. Start development
+npm run dev
+\end{lstlisting}
 
-# 6. Open frontend
-# Open frontend/index.html in browser
+\subsection{Deployment to Vercel}
+\begin{lstlisting}[language=bash]
+# 1. Push to GitHub
+git push origin main
+
+# 2. Import project in Vercel
+# Connect GitHub repository
+
+# 3. Configure environment variables
+# Add DATABASE_URL, SESSION_SECRET, NODE_ENV
+
+# 4. Deploy
+# Vercel automatically builds and deploys
 \end{lstlisting}
 
 \section{Appendix B: API Documentation}
